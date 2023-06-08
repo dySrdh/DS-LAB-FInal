@@ -1,0 +1,8 @@
+4324 | AKU   | LG   | Kompor Listrik   | 400.00 | 6000.00 | 6
+4325 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4327 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4329 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4321 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4335 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4345 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4315 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
