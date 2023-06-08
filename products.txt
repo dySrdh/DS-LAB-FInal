@@ -6,3 +6,6 @@
 4335 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
 4345 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
 4315 | 1  | Miyako  | Mesin Cuci  | 4000.00 | 5000.00 | 9
+4346 | Test product | Polytron | Mesin Cuci | 1000.00 | 10000.00 | 20
+3956 | Test prduc | LG | Kompor Listrik | 1.00 | 2.00 | 33
+4057 | OKDWOKD | LG | Kompor Listrik | 424.00 | 2.00 | 2

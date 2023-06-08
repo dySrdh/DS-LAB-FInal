@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_ID 10000
 
 // Structure to hold user information
 typedef struct {
@@ -27,6 +31,7 @@ typedef struct BSTNode {
     struct BSTNode* left;
     struct BSTNode* right;
 } BSTNode;
+
 
 void displayInOrder(BSTNode* root) {
     if (root != NULL) {
@@ -221,26 +226,41 @@ void addNewProduct(Product* product) {
     printf("New product added successfully!\n");
 }
 
-// Function to generate a unique ID for each product
-int generateProductId() {
-    FILE* file = fopen("products.txt", "r");
+
+bool isIdExist(int id, const char *filename) {
+    FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Failed to open the file.\n");
-        return -1;
+        perror("Failed to open file");
+        exit(EXIT_FAILURE);
     }
 
-    int maxId = 0;
-    int currentId;
-    while (fscanf(file, "%d", &currentId) == 1) {
-        if (currentId > maxId) {
-            maxId = currentId;
+    int existingId;
+    while (fscanf(file, "%d", &existingId) == 1) {
+        if (existingId == id) {
+            fclose(file);
+            return true;
         }
-        fscanf(file, "%*[^\n]"); // Skip to the end of the line
     }
-    fclose(file);
 
-    return maxId + 1;
+    fclose(file);
+    return false;
 }
+
+
+// Function to generate a unique ID for each product
+int generateProductId(const char *filename) {
+    srand(time(NULL));
+    int id;
+    bool isUnique;
+
+    do {
+        id = rand() % MAX_ID + 1;
+        isUnique = !isIdExist(id, filename);
+    } while (!isUnique);
+
+    return id;
+}
+
 
 // Function to write product data to a text file
 void writeProductDataToFile(Product* product) {
@@ -347,7 +367,7 @@ void deleteProductConfirmation(BSTNode** rootPtr, int id) {
             BSTNode* current = *rootPtr;
             BSTNode* parent = NULL;
             BSTNode* successor;
-            
+
             // Case 1: No child or one child
             if (current->left == NULL) {
                 *rootPtr = current->right;
@@ -364,12 +384,12 @@ void deleteProductConfirmation(BSTNode** rootPtr, int id) {
                     successor = successor->left;
                 }
                 current->product = successor->product;
-                
+
                 if (parent != NULL)
                     parent->left = successor->right;
                 else
                     current->right = successor->right;
-                
+
                 free(successor);
             }
 
@@ -411,9 +431,6 @@ void deleteProductConfirmation(BSTNode** rootPtr, int id) {
 }
 
 
-
-
-
 // Function to reset password and update the text file
 void resetPassword(User* user) {
     char newPassword[20];
@@ -440,6 +457,8 @@ void resetPassword(User* user) {
     fprintf(file, "%s %s %s %s", user->username, user->password, user->securityAnswer1, user->securityAnswer2);
     fclose(file);
 }
+
+
 void generateReportByStockDescending(BSTNode* root, FILE* file) {
     if (root != NULL) {
         generateReportByStockDescending(root->right, file);
@@ -462,6 +481,8 @@ void generateReportByStockAscending(BSTNode* root, FILE* file) {
         generateReportByStockAscending(root->right, file);
     }
 }
+
+
 void generateReportByStock(BSTNode* root, int order) {
     FILE* file;
     if (order == 1)
@@ -486,7 +507,6 @@ void generateReportByStock(BSTNode* root, int order) {
 }
 
 
-
 // Function to display the main menu
 void displayMainMenu() {
     printf("WEREHOUSE GUDANG ELECTRONIK\n");
@@ -499,6 +519,7 @@ void displayMainMenu() {
     printf("5. Exit\n");
     printf("Enter your choice: ");
 }
+
 
 int main() {
     User user;
@@ -557,12 +578,13 @@ int main() {
         }
     }
 
-    // To load the text file content into BST
-    loadProductsFromFile(&root);
     int input;
     int menuChoice;
     int id;
+    int productId, newStock;
     do {
+        // To load the text file content into BST
+        loadProductsFromFile(&root);
         displayMainMenu();
         scanf("%d", &menuChoice);
 
@@ -570,7 +592,7 @@ int main() {
             case 1:
                 system("cls");
                 addNewProduct(&product);
-                product.id = generateProductId();
+                product.id = generateProductId("products.txt");
                 writeProductDataToFile(&product);
                 break;
             case 2:
@@ -596,22 +618,20 @@ int main() {
                 searchProduct(root, id);
                 break;
             case 2:
-               int productId;
-             int newStock;
-            printf("--- Update Product Stock ---\n");
-            printf("Enter the product ID: ");
-            scanf("%d", &productId);
-            printf("Enter the new stock: ");
-            scanf("%d", &newStock);
-            updateProductStock(root, productId, newStock);
+                printf("--- Update Product Stock ---\n");
+                printf("Enter the product ID: ");
+                scanf("%d", &productId);
+                printf("Enter the new stock: ");
+                scanf("%d", &newStock);
+                updateProductStock(root, productId, newStock);
                 break;
-                
+
             case 3:
                 printf("Enter product ID to delete: ");
                 scanf("%d", &id);
                 deleteProductConfirmation(&root, id);
                 break;
-            
+
             case 4:
                 displayMainMenu();
                 break;
@@ -628,11 +648,11 @@ int main() {
                 switch (input) {
                     case 1:
                     system("cls");
-                    generateReportByStock(root, 1); 
+                    generateReportByStock(root, 1);
                     break;
                     case 2:
                     system("cls");
-                    generateReportByStock(root, 0); 
+                    generateReportByStock(root, 0);
                     break;
                 }
             case 5:
